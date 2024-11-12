@@ -13,7 +13,6 @@ def get_states():
     return jsonify([state.to_dict() for state in states])
 
 
-<<<<<<< HEAD
 @app_views.route("/states/<state_id>", methods=["GET"], strict_slashes=False)
 def get_state(state_id):
     """Retrieves a State object by ID."""
@@ -23,8 +22,7 @@ def get_state(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route("/states/<state_id>", methods=["DELETE"],
-                 strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
 def delete_state(state_id):
     """Deletes a State object by ID."""
     state = storage.get(State, state_id)
@@ -33,26 +31,6 @@ def delete_state(state_id):
     storage.delete(state)
     storage.save()
     return jsonify({}), 200
-=======
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///states.db'
-
-
-db = SQLAlchemy(app)
-
-
-class State(db.Model):
-    __tablename__ = "states"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    @staticmethod
-    def to_dict(state):
-        return {"id": state.id, "name": state.name}
->>>>>>> 23043edd475a478a2c022b7ebd2df6b2d3c5ce2f
 
 
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
