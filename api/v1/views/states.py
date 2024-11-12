@@ -1,8 +1,8 @@
 #!/usr/bin/python
 """makes a new webframwork"""
-from flask import Flask
+from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import requests
-import SQLAlchemy
 
 
 app = Flask("__name__")
@@ -16,7 +16,7 @@ class State(db.Model):
 
     @staticmethod
     def to_dict(state):
-        return {"is": state.id, "name": state.name}
+        return {"id": state.id, "name": state.name}
 
 
 with app.app_context():
@@ -25,7 +25,8 @@ with app.app_context():
 
 @app.route("/api/v1/states", methods=["GET"])
 def all_states():
-    state = state.query.all()
+    states = State.query.all()
+    return jsonify([State.to_dict(state) for state in states])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
