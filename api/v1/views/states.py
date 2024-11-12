@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """makes a new webframwork"""
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
