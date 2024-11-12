@@ -40,8 +40,7 @@ class TestDBStorageDocs(unittest.TestCase):
     def test_pep8_conformance_test_db_storage(self):
         """Test tests/test_models/test_db_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_engine/\
-test_db_storage.py'])
+        result = pep8s.check_files(['tests/test_models/test_engine/test_db_storage.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
 
@@ -68,21 +67,47 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestFileStorage(unittest.TestCase):
-    """Test the FileStorage class"""
+class TestDBStorage(unittest.TestCase):
+    """Test the DBStorage class"""
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
-        """Test that all returns a dictionaty"""
+        """Test that all returns a dictionary"""
         self.assertIs(type(models.storage.all()), dict)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_no_class(self):
         """Test that all returns all rows when no class is passed"""
+        result = models.storage.all(None)
+        self.assertIs(type(result), dict)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
-        """test that new adds an object to the database"""
+        """Test that new adds an object to the database"""
+        storage = models.storage
+        new_obj = Amenity()  # Create a new Amenity object
+        new_obj.name = "Test Amenity"
+        
+        # Add the object to the storage
+        storage.new(new_obj)
+        
+        # Assert that the object is in the storage
+        all_objects = storage.all(Amenity)
+        self.assertIn("Amenity." + new_obj.id, all_objects)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
-        """Test that save properly saves objects to file.json"""
+        """Test that save properly saves objects to the database"""
+        storage = models.storage
+        new_obj = Amenity()  # Create a new Amenity object
+        new_obj.name = "Test Amenity"
+        
+        # Add the object to the storage and save
+        storage.new(new_obj)
+        storage.save()
+        
+        # Retrieve the object from the database by its ID
+        saved_obj = storage.get(Amenity, new_obj.id)
+        
+        # Assert that the object is correctly saved
+        self.assertEqual(saved_obj.name, "Test Amenity")

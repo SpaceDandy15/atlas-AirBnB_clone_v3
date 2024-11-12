@@ -40,8 +40,7 @@ class TestFileStorageDocs(unittest.TestCase):
     def test_pep8_conformance_test_file_storage(self):
         """Test tests/test_models/test_file_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_engine/\
-test_file_storage.py'])
+        result = pep8s.check_files(['tests/test_models/test_engine/test_file_storage.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
 
@@ -113,3 +112,34 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that get retrieves the correct object by ID"""
+        storage = FileStorage()
+        # Create a new object
+        instance = Amenity()
+        storage.new(instance)
+        storage.save()
+        
+        # Use the get method to retrieve the object
+        retrieved_obj = storage.get(Amenity, instance.id)
+        self.assertEqual(retrieved_obj, instance)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test that count returns the correct number of objects"""
+        storage = FileStorage()
+        count_before = storage.count(Amenity)
+        
+        # Create and add a new object
+        instance = Amenity()
+        storage.new(instance)
+        storage.save()
+        
+        count_after = storage.count(Amenity)
+        self.assertEqual(count_after, count_before + 1)
+        
+        # Test counting all objects
+        count_all = storage.count()
+        self.assertGreater(count_all, 0)
