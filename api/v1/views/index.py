@@ -2,14 +2,12 @@
 """This file defines routes for API version 1"""
 
 from flask import jsonify
-from api.v1.views import app_views, storage, valid_models
-
+from api.v1.views import storage, valid_models  # No import of app_views here
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
     """Returns the status of the API as a JSON object"""
     return jsonify({"status": "OK"})
-
 
 @app_views.route('/stats', strict_slashes=False)
 def count_each_model():
