@@ -59,7 +59,7 @@ def create_review(place_id):
     if not request_data:
         return "Not valid json", 400
 
-    user_id = request_data.get("id")
+    user_id = request_data.get("user_id")
     if not user_id:
         raise BadRequest("Missing user_id")
 
@@ -74,7 +74,7 @@ def create_review(place_id):
     storage.new(new_review)
     storage.save()
 
-    return new_review.to_dict(), 201
+    return new_review, 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
