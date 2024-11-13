@@ -70,8 +70,12 @@ def create_review(place_id):
     text = request_data.get("text")
     if not text:
         raise BadRequest("Missing text")
-
-    new_review = Review(user_id=user.id, place_id=place.id, text=text)
+    temp = {
+        "user_id": user_id,
+        "place_id": place_id,
+        "text": text
+    }
+    new_review = Review(temp)
     storage.new(new_review)
     storage.save()
 
