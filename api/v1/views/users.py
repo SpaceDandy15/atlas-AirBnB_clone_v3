@@ -15,9 +15,6 @@ app = Flask(__name__)
 def get_users():
     """
     Retrieve the list of all User objects.
-
-    Route responds to GET requests to fetch a list of all users in the system.
-    It returns a JSON rep of all the users' data using the to_dict() method.
     """
     users = storage.all(User)
     return jsonify([user.to_dict() for user in users.values()])
@@ -27,9 +24,6 @@ def get_users():
 def get_user(user_id):
     """
     Retrieve a User object by its ID.
-
-    Route responds to GET requests to fetch a user based on the user_id.
-    If the user is not found, it raises a 404 error.
     """
     user = storage.get(User, user_id)
     if user is None:
@@ -41,10 +35,6 @@ def get_user(user_id):
 def delete_user(user_id):
     """
     Delete a User object by its ID.
-
-    Route responds to DELETE requests to delete a user based on the user_id.
-    If the user is not found, it raises a 404 error.
-    After deletion, it returns an empty dictionary with a 200 status code.
     """
     user = storage.get(User, user_id)
     if user is None:
@@ -58,12 +48,6 @@ def delete_user(user_id):
 def create_user():
     """
     Create a new User.
-
-    This route responds to POST requests to create a new user.
-    The request must include a valid JSON body with the keys
-    'email' and 'password'. If any key is missing
-    or the body is not valid JSON, it raises a 400 error.
-    Returns the newly created user with a 201 status code.
     """
     if not request.is_json:
         abort(400, description="Not a JSON")
@@ -84,13 +68,6 @@ def create_user():
 def update_user(user_id):
     """
     Update an existing User object.
-
-    Route responds to PUT requests to update a user based on the user_id.
-    Request must include valid JSON data,
-    any fields such as 'id', 'email', 'created_at',
-    and 'updated_at' will be ignored during the update.
-    If the user is not found, it raises a 404 error.
-    Returns the updated user object with a 200 status code.
     """
     user = storage.get(User, user_id)
     if user is None:
@@ -101,6 +78,7 @@ def update_user(user_id):
 
     data = request.get_json()
 
+    # Ignore the following fields for updates
     for key, value in data.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(user, key, value)
