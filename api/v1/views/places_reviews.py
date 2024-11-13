@@ -8,6 +8,7 @@ from models.place import Place
 from models.review import Review
 from models.user import User
 from werkzeug.exceptions import NotFound, BadRequest
+import uuid
 
 
 @app_views.route('/places/<place_id>/reviews',
@@ -69,11 +70,12 @@ def create_review(place_id):
     text = request_data.get("text")
     if not text:
         raise BadRequest("Missing text")
-    new_review = Review(**request_data)
+    review_id = uuid.uuid4()
+    new_review = Review({"id": review_id, **request_data})
     storage.new(new_review)
     storage.save()
 
-    return jsonify(new_review.to_dict()), 201
+    return new_review.to_dict(), 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
