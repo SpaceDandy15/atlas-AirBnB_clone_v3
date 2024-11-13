@@ -14,7 +14,7 @@ def status():
 @app_views.route('/stats', strict_slashes=False)
 def count_each_model():
     '''Retrieve and return the number of each object by type'''
-  
+
     # Defer the imports to avoid circular import
     from api.v1.views import storage, valid_models
 
