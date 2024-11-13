@@ -54,10 +54,9 @@ def create_review(place_id):
     if not place:
         raise NotFound("Place not found")
 
-    try:
-        request_data = request.get_json(silent=True)
-    except Exception:
-        raise BadRequest("Not a JSON")
+    request_data = request.get_json(silent=True)
+    if not request_data:
+        return "Not valid json", 400
 
     user_id = request_data.get("user_id")
     if not user_id:
