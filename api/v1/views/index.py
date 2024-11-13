@@ -29,6 +29,5 @@ def count_each_model():
     }
     for name, model in valid_models().items():
         count = storage.count(model)
-        name = model_names.get(name)
-        counts.update({name: count})
+        counts[model_names[name]] = count
     return jsonify(counts)
