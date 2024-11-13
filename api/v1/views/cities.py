@@ -65,7 +65,7 @@ def update_city(city_id):
     if not city:
         abort(404)
 
-    update_data = request.get_json()
+    update_data = request.get_json(silent=True)
     if not update_data:
         return jsonify({"error": "Not a JSON"}), 400
 
