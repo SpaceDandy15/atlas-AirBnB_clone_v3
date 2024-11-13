@@ -39,7 +39,7 @@ def create_state():
     """Creates a new State object."""
     data = request.get_json(silent=True)  # silent=True prevents exception
     if data is None:
-        abort(400, description="Not a JSON")  #if JSON is invalid or missing
+        abort(400, description="Not a JSON")
     if "name" not in data:
         abort(400, description="Missing name")  # if 'name' field is missing
     new_state = State(**data)
