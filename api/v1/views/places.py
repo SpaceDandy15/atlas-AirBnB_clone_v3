@@ -3,7 +3,7 @@
 Module that handles all default RESTful API actions for Place objects.
 """
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 from models import storage
 from models.city import City
 from models.place import Place
@@ -104,7 +104,7 @@ def create_place(city_id):
         abort(404, description="City not found")
 
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
     except Exception:
         abort(400, description="Not a JSON")
 
@@ -145,7 +145,7 @@ def update_place(place_id):
         abort(404, description="Place not found")
 
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
     except Exception:
         abort(400, description="Not a JSON")
 

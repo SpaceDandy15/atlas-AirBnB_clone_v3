@@ -55,7 +55,7 @@ def create_review(place_id):
         raise NotFound("Place not found")
 
     try:
-        request_data = request.get_json()
+        request_data = request.get_json(silent=True)
     except Exception:
         raise BadRequest("Not a JSON")
 
@@ -70,8 +70,12 @@ def create_review(place_id):
     text = request_data.get("text")
     if not text:
         raise BadRequest("Missing text")
-
-    new_review = Review(user_id=user.id, place_id=place.id, text=text)
+    temp = {
+        "user_id": user_id,
+        "place_id": place_id,
+        "text": text
+    }
+    new_review = Review(temp)
     storage.new(new_review)
     storage.save()
 
@@ -86,7 +90,7 @@ def update_review(review_id):
         raise NotFound("Review not found")
 
     try:
-        request_data = request.get_json()
+        request_data = request.get_json(silent=True)
     except Exception:
         raise BadRequest("Not a JSON")
 
