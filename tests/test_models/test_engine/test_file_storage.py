@@ -120,6 +120,7 @@ class TestFileStorage(unittest.TestCase):
         storage = FileStorage()
 
         # Check initial count, should be 0 if no objects have been added
+        storage._FileStorage__objects.clear()
         initial_count = storage.count()
         self.assertEqual(initial_count, 0)
 
