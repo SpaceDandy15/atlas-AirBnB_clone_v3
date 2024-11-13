@@ -46,7 +46,7 @@ def create_city(state_id):
     if not state:
         abort(404)
 
-    city_data = request.get_json()
+    city_data = request.get_json(silent=True)
     if not city_data:
         return jsonify({"error": "Not a JSON"}), 400
     if 'name' not in city_data:

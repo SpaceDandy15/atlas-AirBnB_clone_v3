@@ -3,7 +3,7 @@
 Module that handles all default RESTful API actions for Place objects.
 """
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 from models import storage
 from models.city import City
 from models.place import Place
