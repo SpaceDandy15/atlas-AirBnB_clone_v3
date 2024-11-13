@@ -67,7 +67,7 @@ def create_user():
     """
     if not request.is_json:
         abort(400, description="Not a JSON")
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
     if 'email' not in data:
         abort(400, description="Missing email")
@@ -99,7 +99,7 @@ def update_user(user_id):
     if not request.is_json:
         abort(400, description="Not a JSON")
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
     for key, value in data.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:

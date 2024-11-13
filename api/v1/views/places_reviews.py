@@ -55,7 +55,7 @@ def create_review(place_id):
         raise NotFound("Place not found")
 
     try:
-        request_data = request.get_json()
+        request_data = request.get_json(silent=True)
     except Exception:
         raise BadRequest("Not a JSON")
 
@@ -86,7 +86,7 @@ def update_review(review_id):
         raise NotFound("Review not found")
 
     try:
-        request_data = request.get_json()
+        request_data = request.get_json(silent=True)
     except Exception:
         raise BadRequest("Not a JSON")
 
