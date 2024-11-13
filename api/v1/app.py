@@ -2,10 +2,14 @@
 """This file defines the Flask app for the API"""
 
 from flask import Flask, jsonify
+from flask_cors import CORS  # Import CORS to allow cross-origin requests
 from models import storage
 from api.v1.views import app_views
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 # Registering the blueprint
 app.register_blueprint(app_views)
@@ -23,6 +27,13 @@ def teardown(exception):
 def not_found(error):
     """Return a JSON-formatted 404 response"""
     return jsonify({"error": "Not found"}), 404
+
+
+# Custom error handler for 405 errors (Method Not Allowed)
+@app.errorhandler(405)
+def method_not_allowed(error):
+    """Return a JSON-formatted 405 response"""
+    return jsonify({"error": "Method Not Allowed"}), 405
 
 
 if __name__ == "__main__":
