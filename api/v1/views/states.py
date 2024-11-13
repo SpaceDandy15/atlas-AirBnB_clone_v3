@@ -41,8 +41,13 @@ def create_state():
     if data is None:
         abort(400, description="Not a JSON")  # 400 error if JSON missing
     if "name" not in data:
+<<<<<<< HEAD
         abort(400, description="Missing name")  # 400 error if field is missing
     new_state = State(**data)
+=======
+        abort(400, description="Missing name")
+    new_state = State(**data).to_dict()
+>>>>>>> 47ea5c49ed62fd782909ec4c4315f43bda7c46bc
     storage.new(new_state)
     storage.save()
     return jsonify(new_state.to_dict()), 201
