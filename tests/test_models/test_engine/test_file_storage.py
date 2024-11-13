@@ -113,3 +113,35 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test count, correctly returns the number of objects in storage"""
+        storage = FileStorage()
+
+        # Check initial count, should be 0 if no objects have been added
+        initial_count = storage.count()
+        self.assertEqual(initial_count, 0)
+
+        # Add some test objects
+        instance1 = Amenity()
+        instance2 = City()
+        instance3 = User()
+        storage.new(instance1)
+        storage.new(instance2)
+        storage.new(instance3)
+
+        # Check count after adding objects, should return 3
+        count_after_addition = storage.count()
+        self.assertEqual(count_after_addition, 3)
+
+        # Save the objects and check if count persists
+        storage.save()
+
+        # Clear the objects to simulate restarting the program
+        FileStorage._FileStorage__objects = {}
+
+        # Reload the storage and check the count again
+        storage.reload()
+        count_after_reload = storage.count()
+        self.assertEqual(count_after_reload, 3)
