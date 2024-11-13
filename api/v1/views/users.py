@@ -77,7 +77,7 @@ def create_user():
     user = User(**data)
     storage.new(user)
     storage.save()
-    return jsonify(user.to_dict()), 201
+    return user.to_dict, 201
 
 
 @app.route('/api/v1/users/<user_id>', methods=['PUT'])
