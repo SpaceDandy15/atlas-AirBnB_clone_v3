@@ -75,7 +75,7 @@ def create_review(place_id):
         "place_id": place_id,
         "text": text
     }
-    new_review = Review(temp)
+    new_review = Review(**temp)
     storage.new(new_review)
     storage.save()
 
