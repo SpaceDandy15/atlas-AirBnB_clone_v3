@@ -22,7 +22,8 @@ def get_state(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=["DELETE"],
+                 strict_slashes=False)
 def delete_state(state_id):
     """Deletes a State object by ID."""
     state = storage.get(State, state_id)
@@ -36,11 +37,11 @@ def delete_state(state_id):
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
 def create_state():
     """Creates a new State object."""
-    data = request.get_json(silent=True)  # silent=True prevents exception on bad JSON
+    data = request.get_json(silent=True)  # silent=True prevents exception
     if data is None:
-        abort(400, description="Not a JSON")  # 400 error if JSON is invalid or missing
+        abort(400, description="Not a JSON")  #if JSON is invalid or missing
     if "name" not in data:
-        abort(400, description="Missing name")  # 400 error if 'name' field is missing
+        abort(400, description="Missing name")  # if 'name' field is missing
     new_state = State(**data)
     storage.new(new_state)
     storage.save()
@@ -53,16 +54,16 @@ def update_state(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    
+
     data = request.get_json(silent=True)
     if data is None:
         abort(400, description="Not a JSON")
-    
+
     # Ignore keys that shouldn't be updated
     ignore_keys = ["id", "created_at", "updated_at"]
     for key, value in data.items():
         if key not in ignore_keys:
             setattr(state, key, value)
-    
+
     storage.save()
     return jsonify(state.to_dict()), 200
