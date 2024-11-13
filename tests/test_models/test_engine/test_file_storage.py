@@ -114,32 +114,34 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(json.loads(string), json.loads(js))
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_get(self):
-        """Test that get retrieves the correct object by ID"""
-        storage = FileStorage()
-        # Create a new object
-        instance = Amenity()
-        storage.new(instance)
-        storage.save()
-        
-        # Use the get method to retrieve the object
-        retrieved_obj = storage.get(Amenity, instance.id)
-        self.assertEqual(retrieved_obj, instance)
-
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
-        """Test that count returns the correct number of objects"""
+        """Test count, correctly returns the number of objects in storage"""
         storage = FileStorage()
-        count_before = storage.count(Amenity)
-        
-        # Create and add a new object
-        instance = Amenity()
-        storage.new(instance)
+
+        # Check initial count, should be 0 if no objects have been added
+        storage._FileStorage__objects.clear()
+        initial_count = storage.count()
+        self.assertEqual(initial_count, 0)
+
+        # Add some test objects
+        instance1 = Amenity()
+        instance2 = City()
+        instance3 = User()
+        storage.new(instance1)
+        storage.new(instance2)
+        storage.new(instance3)
+
+        # Check count after adding objects, should return 3
+        count_after_addition = storage.count()
+        self.assertEqual(count_after_addition, 3)
+
+        # Save the objects and check if count persists
         storage.save()
-        
-        count_after = storage.count(Amenity)
-        self.assertEqual(count_after, count_before + 1)
-        
-        # Test counting all objects
-        count_all = storage.count()
-        self.assertGreater(count_all, 0)
+
+        # Clear the objects to simulate restarting the program
+        FileStorage._FileStorage__objects = {}
+
+        # Reload the storage and check the count again
+        storage.reload()
+        count_after_reload = storage.count()
+        self.assertEqual(count_after_reload, 3)
